@@ -1,0 +1,44 @@
+services: 
+  db:
+    container_name: grpc-management-db
+    image: postgres:16.6
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    ports:
+      - "${PGPORT}:${PGPORT}"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - api-db-network
+
+  api:
+    container_name: grpc-management-api
+    build: .
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      PGHOST: db
+      PGPORT: ${PGPORT}
+      PGUSER: ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
+      PGDATABASE: ${PGDATABASE}
+      PORT: ${PORT}
+      SECRET_KEY: ${SECRET_KEY}
+      ENV: ${ENV}
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - api-db-network
+    init: true
+    stop_signal: SIGINT
+    stop_grace_period: 30s
+
+volumes:
+  db-data:
+
+networks:
+  api-db-network:

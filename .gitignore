@@ -1,0 +1,18 @@
+# Config and editor files
+.vscode
+
+# Environment 
+.env
+vendor
+node_modules
+*.txt 
+
+# Executables
+tmp
+luso-wiki
+luso-wiki.exe
+
+# Logs
+log
+logs
+*.log
