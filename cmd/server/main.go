@@ -18,7 +18,8 @@ func main() {
 
 	// Setting up slog
 	pkg.SetupSlog(ctx)
-	go pkg.ScheduleLogRotation(ctx)
+	daysToKeepLogs := 30
+	go pkg.ScheduleLogRotation(ctx, daysToKeepLogs)
 
 	// Initializing environment variables
 	if os.Getenv("ENV") != "production" {

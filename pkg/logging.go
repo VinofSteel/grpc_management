@@ -76,9 +76,12 @@ func SetupSlog(ctx context.Context) {
 	)
 }
 
-func ScheduleLogRotation(ctx context.Context) {
+func ScheduleLogRotation(ctx context.Context, days int) {
 	// Get retention period from env or use default
 	retentionDays := 7
+	if days != 0 {
+		retentionDays = days
+	}
 	if retentionStr := os.Getenv("LOG_RETENTION_DAYS"); retentionStr != "" {
 		if days, err := strconv.Atoi(retentionStr); err == nil && days > 0 {
 			retentionDays = days
