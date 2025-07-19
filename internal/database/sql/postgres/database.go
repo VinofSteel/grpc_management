@@ -10,7 +10,7 @@ import (
 
 type Queries struct {
 	db *sqlx.DB
-	
+
 	database.UsersRepository
 }
 

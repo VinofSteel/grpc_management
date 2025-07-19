@@ -64,8 +64,11 @@ func (q *Queries) ListUsersByIDs(ctx context.Context, params database.ListUsersB
 
 	// Create a struct with the array parameter
 	queryParams := struct {
-		IDs         interface{driver.Valuer; sql.Scanner}    `db:"ids"`
-		ListDeleted bool         `db:"list_deleted"`
+		IDs interface {
+			driver.Valuer
+			sql.Scanner
+		} `db:"ids"`
+		ListDeleted bool `db:"list_deleted"`
 	}{
 		IDs:         pq.Array(interfaces),
 		ListDeleted: params.ListDeleted,

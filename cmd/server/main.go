@@ -2,13 +2,17 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
+	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/joho/godotenv"
 	"github.com/vinofsteel/grpc-management/pkg"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -37,4 +41,35 @@ func main() {
 		slog.InfoContext(ctx, "Received cancellation signal", "signal", sig)
 		cancel()
 	}()
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	addr := fmt.Sprintf(":%s", port)
+
+	slog.LogAttrs(
+		ctx,
+		slog.LevelInfo,
+		"Starting TCP server",
+	)
+
+	lis, err := net.Listen("tcp", addr)
+	if err != nil && err != http.ErrServerClosed {
+		slog.ErrorContext(ctx, "TCP Server error", "error", err)
+		os.Exit(1)
+	}
+
+	slog.LogAttrs(
+		ctx,
+		slog.LevelInfo,
+		"Starting gRPC server",
+		slog.Group("server", slog.String("address", addr)),
+	)
+
+	grpcServer := grpc.NewServer()
+	if err := grpcServer.Serve(lis); err != nil {
+		slog.ErrorContext(ctx, "gRPC Server error", "error", err)
+		os.Exit(1)
+	}
 }
