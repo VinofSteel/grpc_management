@@ -42,17 +42,17 @@ m-create:
 ifndef name
 	$(error name is required, e.g., `make m-create name=article_alter_table_add_column_content`)
 endif
-	goose create -s -dir internal/database/migrations $(name) sql
+	goose create -s -dir internal/database/sql/postgres/migrations $(name) sql
 .PHONY: m-create
 
 m-up:
-	goose -dir internal/database/migrations postgres "$(PG_CONN_STRING)" up
+	goose -dir internal/database/sql/postgres/migrations postgres "$(PG_CONN_STRING)" up
 .PHONY: m-up
 
 m-down:
-	goose -dir internal/database/migrations postgres "$(PG_CONN_STRING)" down
+	goose -dir internal/database/sql/postgres/migrations postgres "$(PG_CONN_STRING)" down
 .PHONY: m-down
 
 m-status:
-	goose -dir internal/database/migrations postgres "$(PG_CONN_STRING)" status
+	goose -dir internal/database/sql/postgres/migrations postgres "$(PG_CONN_STRING)" status
 .PHONY: m-status
