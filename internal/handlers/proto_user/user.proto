@@ -1,6 +1,6 @@
 syntax = "proto3";
-package user;
-option go_package = "./internal/handlers/user";
+package proto_user;
+option go_package = "./internal/handlers/proto_user";
 
 message NewUser {
     string email = 1;

@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v3.21.12
-// source: proto/user.proto
+// source: internal/handlers/proto_user/user.proto
 
-package user
+package proto_user
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -32,7 +32,7 @@ type NewUser struct {
 
 func (x *NewUser) Reset() {
 	*x = NewUser{}
-	mi := &file_proto_user_proto_msgTypes[0]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +44,7 @@ func (x *NewUser) String() string {
 func (*NewUser) ProtoMessage() {}
 
 func (x *NewUser) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_proto_msgTypes[0]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +57,7 @@ func (x *NewUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NewUser.ProtoReflect.Descriptor instead.
 func (*NewUser) Descriptor() ([]byte, []int) {
-	return file_proto_user_proto_rawDescGZIP(), []int{0}
+	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *NewUser) GetEmail() string {
@@ -94,7 +94,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_proto_user_proto_msgTypes[1]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -106,7 +106,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_proto_msgTypes[1]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -119,7 +119,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_proto_user_proto_rawDescGZIP(), []int{1}
+	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *User) GetId() string {
@@ -157,11 +157,12 @@ func (x *User) GetUpdatedAt() string {
 	return ""
 }
 
-var File_proto_user_proto protoreflect.FileDescriptor
+var File_internal_handlers_proto_user_user_proto protoreflect.FileDescriptor
 
-const file_proto_user_proto_rawDesc = "" +
+const file_internal_handlers_proto_user_user_proto_rawDesc = "" +
 	"\n" +
-	"\x10proto/user.proto\x12\x04user\"W\n" +
+	"'internal/handlers/proto_user/user.proto\x12\n" +
+	"proto_user\"W\n" +
 	"\aNewUser\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -173,32 +174,31 @@ const file_proto_user_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x04 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x05 \x01(\tR\tupdatedAt28\n" +
-	"\vUserService\x12)\n" +
+	"updated_at\x18\x05 \x01(\tR\tupdatedAt2D\n" +
+	"\vUserService\x125\n" +
 	"\n" +
-	"CreateUser\x12\r.user.NewUser\x1a\n" +
-	".user.User\"\x00B\x1aZ\x18./internal/handlers/userb\x06proto3"
+	"CreateUser\x12\x13.proto_user.NewUser\x1a\x10.proto_user.User\"\x00B Z\x1e./internal/handlers/proto_userb\x06proto3"
 
 var (
-	file_proto_user_proto_rawDescOnce sync.Once
-	file_proto_user_proto_rawDescData []byte
+	file_internal_handlers_proto_user_user_proto_rawDescOnce sync.Once
+	file_internal_handlers_proto_user_user_proto_rawDescData []byte
 )
 
-func file_proto_user_proto_rawDescGZIP() []byte {
-	file_proto_user_proto_rawDescOnce.Do(func() {
-		file_proto_user_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_user_proto_rawDesc), len(file_proto_user_proto_rawDesc)))
+func file_internal_handlers_proto_user_user_proto_rawDescGZIP() []byte {
+	file_internal_handlers_proto_user_user_proto_rawDescOnce.Do(func() {
+		file_internal_handlers_proto_user_user_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_handlers_proto_user_user_proto_rawDesc), len(file_internal_handlers_proto_user_user_proto_rawDesc)))
 	})
-	return file_proto_user_proto_rawDescData
+	return file_internal_handlers_proto_user_user_proto_rawDescData
 }
 
-var file_proto_user_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_proto_user_proto_goTypes = []any{
-	(*NewUser)(nil), // 0: user.NewUser
-	(*User)(nil),    // 1: user.User
+var file_internal_handlers_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_internal_handlers_proto_user_user_proto_goTypes = []any{
+	(*NewUser)(nil), // 0: proto_user.NewUser
+	(*User)(nil),    // 1: proto_user.User
 }
-var file_proto_user_proto_depIdxs = []int32{
-	0, // 0: user.UserService.CreateUser:input_type -> user.NewUser
-	1, // 1: user.UserService.CreateUser:output_type -> user.User
+var file_internal_handlers_proto_user_user_proto_depIdxs = []int32{
+	0, // 0: proto_user.UserService.CreateUser:input_type -> proto_user.NewUser
+	1, // 1: proto_user.UserService.CreateUser:output_type -> proto_user.User
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -206,26 +206,26 @@ var file_proto_user_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_proto_user_proto_init() }
-func file_proto_user_proto_init() {
-	if File_proto_user_proto != nil {
+func init() { file_internal_handlers_proto_user_user_proto_init() }
+func file_internal_handlers_proto_user_user_proto_init() {
+	if File_internal_handlers_proto_user_user_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_user_proto_rawDesc), len(file_proto_user_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_handlers_proto_user_user_proto_rawDesc), len(file_internal_handlers_proto_user_user_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_user_proto_goTypes,
-		DependencyIndexes: file_proto_user_proto_depIdxs,
-		MessageInfos:      file_proto_user_proto_msgTypes,
+		GoTypes:           file_internal_handlers_proto_user_user_proto_goTypes,
+		DependencyIndexes: file_internal_handlers_proto_user_user_proto_depIdxs,
+		MessageInfos:      file_internal_handlers_proto_user_user_proto_msgTypes,
 	}.Build()
-	File_proto_user_proto = out.File
-	file_proto_user_proto_goTypes = nil
-	file_proto_user_proto_depIdxs = nil
+	File_internal_handlers_proto_user_user_proto = out.File
+	file_internal_handlers_proto_user_user_proto_goTypes = nil
+	file_internal_handlers_proto_user_user_proto_depIdxs = nil
 }
