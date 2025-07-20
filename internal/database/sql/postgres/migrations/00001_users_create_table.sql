@@ -6,8 +6,8 @@ CREATE TABLE users (
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMP,
-    email TEXT UNIQUE NOT NULL,
-    username VARCHAR(25) UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL CHECK (email <> ''),
+    username VARCHAR(25) UNIQUE NOT NULL CHECK (username <> ''),
     password TEXT NOT NULL
 );
 

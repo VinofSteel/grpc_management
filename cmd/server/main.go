@@ -15,6 +15,7 @@ import (
 	"github.com/vinofsteel/grpc-management/internal/database/sql/postgres"
 	"github.com/vinofsteel/grpc-management/internal/handlers"
 	"github.com/vinofsteel/grpc-management/internal/handlers/proto_user"
+	"github.com/vinofsteel/grpc-management/internal/validation"
 	"github.com/vinofsteel/grpc-management/pkg"
 	"google.golang.org/grpc"
 )
@@ -69,8 +70,12 @@ func main() {
 		slog.ErrorContext(ctx, "Error creating PSQL Queries", "error", err)
 		os.Exit(1)
 	}
+
+	validationProvider := validation.NewValidateValidationrovider(ctx)
+
 	handlers := handlers.New(handlers.Config{
-		Queries: psqlQueries,
+		Queries:   psqlQueries,
+		Validator: validationProvider,
 	})
 
 	grpcServer := grpc.NewServer()
