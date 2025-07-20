@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
+	"github.com/vinofsteel/grpc-management/internal/handlers/user"
 	"github.com/vinofsteel/grpc-management/pkg"
 	"google.golang.org/grpc"
 )
@@ -67,7 +68,10 @@ func main() {
 		slog.Group("server", slog.String("address", addr)),
 	)
 
+	s := user.Server{}
 	grpcServer := grpc.NewServer()
+	user.RegisterUserServiceServer(grpcServer, &s)
+
 	if err := grpcServer.Serve(lis); err != nil {
 		slog.ErrorContext(ctx, "gRPC Server error", "error", err)
 		os.Exit(1)

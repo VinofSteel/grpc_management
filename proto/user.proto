@@ -1,0 +1,21 @@
+syntax = "proto3";
+package user;
+option go_package = "./internal/handlers/user";
+
+message NewUser {
+    string email = 1;
+    string username = 2;
+    string password = 3;
+}
+
+message User {
+    string id = 1;
+    string email = 2;
+    string username = 3;
+    string created_at = 4;
+    string updated_at = 5;
+}
+
+service UserService {
+    rpc CreateUser(NewUser) returns (User) {}
+}
