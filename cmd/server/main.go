@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/vinofsteel/grpc-management/internal/database/sql/postgres"
 	"github.com/vinofsteel/grpc-management/internal/handlers"
 	"github.com/vinofsteel/grpc-management/internal/handlers/proto_user"
 	"github.com/vinofsteel/grpc-management/pkg"
@@ -61,9 +62,19 @@ func main() {
 		slog.Group("server", slog.String("address", addr)),
 	)
 
-	handlers := handlers.Handlers{}
+	// Create dependencies for Handlers
+	dbProvider := postgres.NewPostgresDatabaseProvider()
+	psqlQueries, err := postgres.NewPSQLQueries(ctx, dbProvider)
+	if err != nil {
+		slog.ErrorContext(ctx, "Error creating PSQL Queries", "error", err)
+		os.Exit(1)
+	}
+	handlers := handlers.New(handlers.Config{
+		Queries: psqlQueries,
+	})
+
 	grpcServer := grpc.NewServer()
-	proto_user.RegisterUserServiceServer(grpcServer, &handlers)
+	proto_user.RegisterUserServiceServer(grpcServer, handlers)
 
 	// Channel to capture server errors
 	serverErrCh := make(chan error, 1)

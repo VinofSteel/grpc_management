@@ -8,19 +8,19 @@ import (
 	"github.com/vinofsteel/grpc-management/pkg"
 )
 
-type Queries struct {
+type PSQLQueries struct {
 	db *sqlx.DB
 
 	database.UsersRepository
 }
 
-func New(ctx context.Context, provider pkg.DBProvider) (*Queries, error) {
+func NewPSQLQueries(ctx context.Context, provider pkg.DBProvider) (*PSQLQueries, error) {
 	db, err := provider.GetConnection(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Queries{
+	return &PSQLQueries{
 		db: db,
 	}, nil
 }

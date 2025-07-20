@@ -22,11 +22,11 @@ RUN git config --global --add safe.directory /app
 
 # Copy and make executable the start script
 WORKDIR /app
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+COPY scripts/start.sh scripts/start.sh
+RUN chmod +x scripts/start.sh
 
 # Exposing api port to the world
 EXPOSE ${PORT}
 
 # Running our api
-CMD ["/start.sh"]
+CMD ["scripts/start.sh"]

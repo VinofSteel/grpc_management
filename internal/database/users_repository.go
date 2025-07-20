@@ -34,8 +34,8 @@ type InsertUserParams struct {
 }
 
 type UpdateUserPasswordParams struct {
-	UserID   string `json:"user_id" db:"user_id"`
-	Password string `json:"password" db:"password"`
+	UserID   uuid.UUID `json:"user_id" db:"user_id"`
+	Password string    `json:"password" db:"password"`
 }
 
 type DeleteUserParams struct {
@@ -45,11 +45,11 @@ type DeleteUserParams struct {
 
 // Interface
 type UsersRepository interface {
-	ListUserByEmail(ctx context.Context, params ListUserByEmailParams) (User, error)
-	ListUserByUsername(ctx context.Context, params ListUserByUsernameParams) (User, error)
-	ListUserById(ctx context.Context, params ListUserByIdParams) (User, error)
-	ListUsersByIDs(ctx context.Context, params ListUsersByIDsParams) ([]User, error)
-	InsertUser(ctx context.Context, params InsertUserParams) (User, error)
-	UpdateUserPassword(ctx context.Context, params UpdateUserPasswordParams) (User, error)
+	ListUserByEmail(ctx context.Context, params ListUserByEmailParams) (*User, error)
+	ListUserByUsername(ctx context.Context, params ListUserByUsernameParams) (*User, error)
+	ListUserById(ctx context.Context, params ListUserByIdParams) (*User, error)
+	ListUsersByIDs(ctx context.Context, params ListUsersByIDsParams) ([]*User, error)
+	InsertUser(ctx context.Context, params InsertUserParams) (*User, error)
+	UpdateUserPassword(ctx context.Context, params UpdateUserPasswordParams) (*User, error)
 	DeleteUser(ctx context.Context, params DeleteUserParams) error
 }

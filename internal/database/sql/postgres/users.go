@@ -12,13 +12,13 @@ import (
 	"github.com/vinofsteel/grpc-management/internal/database"
 )
 
-func (q *Queries) ListUserByEmail(ctx context.Context, params database.ListUserByEmailParams) (database.User, error) {
+func (q *PSQLQueries) ListUserByEmail(ctx context.Context, params database.ListUserByEmailParams) (*database.User, error) {
 	slog.InfoContext(ctx, "Listing user by email", "email", params.Email, "layer", "repository", "driver", "psql")
 
 	query := `SELECT
 		id, created_at, updated_at, email, username, password 
 			FROM users 
-			WHERE email LIKE :email`
+			WHERE email = :email`
 
 	if !params.ListDeleted {
 		query += ` AND deleted_at IS NULL`
@@ -28,7 +28,7 @@ func (q *Queries) ListUserByEmail(ctx context.Context, params database.ListUserB
 	rows, err := q.db.NamedQueryContext(ctx, query, params)
 	if err != nil {
 		slog.ErrorContext(ctx, "Error querying user by email", "error", err, "email", params.Email)
-		return user, err
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -36,15 +36,15 @@ func (q *Queries) ListUserByEmail(ctx context.Context, params database.ListUserB
 		err = rows.StructScan(&user)
 		if err != nil {
 			slog.ErrorContext(ctx, "Error scanning user by email", "error", err, "email", params.Email)
+			return nil, err
 		}
-	} else {
-		err = sql.ErrNoRows
+		return &user, nil
 	}
 
-	return user, err
+	return nil, sql.ErrNoRows
 }
 
-func (q *Queries) ListUsersByIDs(ctx context.Context, params database.ListUsersByIDsParams) ([]database.User, error) {
+func (q *PSQLQueries) ListUsersByIDs(ctx context.Context, params database.ListUsersByIDsParams) ([]*database.User, error) {
 	slog.InfoContext(ctx, "Listing users by ids", "ids", params.IDs.Strings(), "layer", "repository", "driver", "psql")
 
 	query := `SELECT
@@ -74,7 +74,7 @@ func (q *Queries) ListUsersByIDs(ctx context.Context, params database.ListUsersB
 		ListDeleted: params.ListDeleted,
 	}
 
-	var users []database.User
+	var users []*database.User
 	rows, err := q.db.NamedQueryContext(ctx, query, queryParams)
 	if err != nil {
 		slog.ErrorContext(ctx, "Error querying users by IDs", "error", err, "ids", params.IDs.Strings())
@@ -88,7 +88,7 @@ func (q *Queries) ListUsersByIDs(ctx context.Context, params database.ListUsersB
 			slog.ErrorContext(ctx, "Error scanning user from rows", "error", err)
 			return nil, err
 		}
-		users = append(users, user)
+		users = append(users, &user)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -99,13 +99,13 @@ func (q *Queries) ListUsersByIDs(ctx context.Context, params database.ListUsersB
 	return users, nil
 }
 
-func (q *Queries) ListUserByUsername(ctx context.Context, params database.ListUserByUsernameParams) (database.User, error) {
+func (q *PSQLQueries) ListUserByUsername(ctx context.Context, params database.ListUserByUsernameParams) (*database.User, error) {
 	slog.InfoContext(ctx, "Listing user by username", "username", params.Username, "layer", "repository", "driver", "psql")
 
 	query := `SELECT
 		id, created_at, updated_at, email, username, password 
 			FROM users 
-			WHERE username LIKE :username`
+			WHERE username = :username`
 
 	if !params.ListDeleted {
 		query += ` AND deleted_at IS NULL`
@@ -115,7 +115,7 @@ func (q *Queries) ListUserByUsername(ctx context.Context, params database.ListUs
 	rows, err := q.db.NamedQueryContext(ctx, query, params)
 	if err != nil {
 		slog.ErrorContext(ctx, "Error querying user by username", "error", err, "username", params.Username)
-		return user, err
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -123,15 +123,15 @@ func (q *Queries) ListUserByUsername(ctx context.Context, params database.ListUs
 		err = rows.StructScan(&user)
 		if err != nil {
 			slog.ErrorContext(ctx, "Error scanning user by username", "error", err, "username", params.Username)
+			return nil, err
 		}
-	} else {
-		err = sql.ErrNoRows
+		return &user, nil
 	}
 
-	return user, err
+	return nil, sql.ErrNoRows
 }
 
-func (q *Queries) ListUserById(ctx context.Context, params database.ListUserByIdParams) (database.User, error) {
+func (q *PSQLQueries) ListUserById(ctx context.Context, params database.ListUserByIdParams) (*database.User, error) {
 	slog.InfoContext(ctx, "Listing user by id", "id", params.ID, "layer", "repository", "driver", "psql")
 
 	query := `SELECT
@@ -147,7 +147,7 @@ func (q *Queries) ListUserById(ctx context.Context, params database.ListUserById
 	rows, err := q.db.NamedQueryContext(ctx, query, params)
 	if err != nil {
 		slog.ErrorContext(ctx, "Error querying user by id", "error", err, "id", params.ID)
-		return user, err
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -155,15 +155,15 @@ func (q *Queries) ListUserById(ctx context.Context, params database.ListUserById
 		err = rows.StructScan(&user)
 		if err != nil {
 			slog.ErrorContext(ctx, "Error scanning user by id", "error", err, "id", params.ID)
+			return nil, err
 		}
-	} else {
-		err = sql.ErrNoRows
+		return &user, nil
 	}
 
-	return user, err
+	return nil, sql.ErrNoRows
 }
 
-func (q *Queries) InsertUser(ctx context.Context, params database.InsertUserParams) (database.User, error) {
+func (q *PSQLQueries) InsertUser(ctx context.Context, params database.InsertUserParams) (*database.User, error) {
 	slog.InfoContext(ctx, "Creating user", "email", params.Email, "username", params.Username, "layer", "repository", "driver", "psql")
 
 	query := `INSERT INTO users 
@@ -174,7 +174,7 @@ func (q *Queries) InsertUser(ctx context.Context, params database.InsertUserPara
 	rows, err := q.db.NamedQueryContext(ctx, query, params)
 	if err != nil {
 		slog.ErrorContext(ctx, "Error inserting user", "error", err, "email", params.Email, "username", params.Username)
-		return user, err
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -182,13 +182,15 @@ func (q *Queries) InsertUser(ctx context.Context, params database.InsertUserPara
 		err = rows.StructScan(&user)
 		if err != nil {
 			slog.ErrorContext(ctx, "Error scanning inserted user", "error", err, "email", params.Email, "username", params.Username)
+			return nil, err
 		}
+		return &user, nil
 	}
 
-	return user, err
+	return nil, err
 }
 
-func (q *Queries) UpdateUserPassword(ctx context.Context, params database.UpdateUserPasswordParams) (database.User, error) {
+func (q *PSQLQueries) UpdateUserPassword(ctx context.Context, params database.UpdateUserPasswordParams) (*database.User, error) {
 	slog.InfoContext(ctx, "Updating user password", "user_id", params.UserID, "layer", "repository", "driver", "psql")
 
 	query := `UPDATE users SET password = :password, updated_at = CURRENT_TIMESTAMP WHERE id = :user_id
@@ -198,7 +200,7 @@ func (q *Queries) UpdateUserPassword(ctx context.Context, params database.Update
 	rows, err := q.db.NamedQueryContext(ctx, query, params)
 	if err != nil {
 		slog.ErrorContext(ctx, "Error updating user password", "error", err, "user_id", params.UserID)
-		return user, err
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -206,13 +208,15 @@ func (q *Queries) UpdateUserPassword(ctx context.Context, params database.Update
 		err = rows.StructScan(&user)
 		if err != nil {
 			slog.ErrorContext(ctx, "Error scanning updated user", "error", err, "user_id", params.UserID)
+			return nil, err
 		}
+		return &user, nil
 	}
 
-	return user, err
+	return nil, err
 }
 
-func (q *Queries) DeleteUser(ctx context.Context, params database.DeleteUserParams) error {
+func (q *PSQLQueries) DeleteUser(ctx context.Context, params database.DeleteUserParams) error {
 	slog.InfoContext(ctx, "Deleting user", "id", params.ID, "hard", params.Hard, "layer", "repository", "driver", "psql")
 
 	tx, err := q.db.BeginTxx(ctx, nil)
