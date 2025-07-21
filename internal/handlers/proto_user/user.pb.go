@@ -157,27 +157,27 @@ func (x *UserResponse) GetUpdatedAt() string {
 	return ""
 }
 
-type GetUserRequest struct {
+type ListUserByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserRequest) Reset() {
-	*x = GetUserRequest{}
+func (x *ListUserByIDRequest) Reset() {
+	*x = ListUserByIDRequest{}
 	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserRequest) String() string {
+func (x *ListUserByIDRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserRequest) ProtoMessage() {}
+func (*ListUserByIDRequest) ProtoMessage() {}
 
-func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
+func (x *ListUserByIDRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -189,14 +189,102 @@ func (x *GetUserRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserRequest.ProtoReflect.Descriptor instead.
-func (*GetUserRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListUserByIDRequest.ProtoReflect.Descriptor instead.
+func (*ListUserByIDRequest) Descriptor() ([]byte, []int) {
 	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetUserRequest) GetId() string {
+func (x *ListUserByIDRequest) GetId() string {
 	if x != nil {
 		return x.Id
+	}
+	return ""
+}
+
+type ListUserByEmailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListUserByEmailRequest) Reset() {
+	*x = ListUserByEmailRequest{}
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListUserByEmailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListUserByEmailRequest) ProtoMessage() {}
+
+func (x *ListUserByEmailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListUserByEmailRequest.ProtoReflect.Descriptor instead.
+func (*ListUserByEmailRequest) Descriptor() ([]byte, []int) {
+	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListUserByEmailRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+type ListUserByUsernameRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListUserByUsernameRequest) Reset() {
+	*x = ListUserByUsernameRequest{}
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListUserByUsernameRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListUserByUsernameRequest) ProtoMessage() {}
+
+func (x *ListUserByUsernameRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListUserByUsernameRequest.ProtoReflect.Descriptor instead.
+func (*ListUserByUsernameRequest) Descriptor() ([]byte, []int) {
+	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ListUserByUsernameRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
@@ -211,7 +299,7 @@ type ListUsersRequest struct {
 
 func (x *ListUsersRequest) Reset() {
 	*x = ListUsersRequest{}
-	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[3]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -223,7 +311,7 @@ func (x *ListUsersRequest) String() string {
 func (*ListUsersRequest) ProtoMessage() {}
 
 func (x *ListUsersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[3]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -236,7 +324,7 @@ func (x *ListUsersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUsersRequest.ProtoReflect.Descriptor instead.
 func (*ListUsersRequest) Descriptor() ([]byte, []int) {
-	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{3}
+	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListUsersRequest) GetOffset() int32 {
@@ -262,7 +350,7 @@ type ListUsersResponse struct {
 
 func (x *ListUsersResponse) Reset() {
 	*x = ListUsersResponse{}
-	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[4]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -274,7 +362,7 @@ func (x *ListUsersResponse) String() string {
 func (*ListUsersResponse) ProtoMessage() {}
 
 func (x *ListUsersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[4]
+	mi := &file_internal_handlers_proto_user_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -287,7 +375,7 @@ func (x *ListUsersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUsersResponse.ProtoReflect.Descriptor instead.
 func (*ListUsersResponse) Descriptor() ([]byte, []int) {
-	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{4}
+	return file_internal_handlers_proto_user_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListUsersResponse) GetUsers() []*UserResponse {
@@ -314,18 +402,24 @@ const file_internal_handlers_proto_user_user_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x04 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x05 \x01(\tR\tupdatedAt\" \n" +
-	"\x0eGetUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"@\n" +
+	"updated_at\x18\x05 \x01(\tR\tupdatedAt\"%\n" +
+	"\x13ListUserByIDRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\".\n" +
+	"\x16ListUserByEmailRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"7\n" +
+	"\x19ListUserByUsernameRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\"@\n" +
 	"\x10ListUsersRequest\x12\x16\n" +
 	"\x06offset\x18\x01 \x01(\x05R\x06offset\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"C\n" +
 	"\x11ListUsersResponse\x12.\n" +
-	"\x05users\x18\x01 \x03(\v2\x18.proto_user.UserResponseR\x05users2\xe5\x01\n" +
+	"\x05users\x18\x01 \x03(\v2\x18.proto_user.UserResponseR\x05users2\x9b\x03\n" +
 	"\vUserService\x12G\n" +
 	"\n" +
-	"CreateUser\x12\x1d.proto_user.CreateUserRequest\x1a\x18.proto_user.UserResponse\"\x00\x12A\n" +
-	"\aGetUser\x12\x1a.proto_user.GetUserRequest\x1a\x18.proto_user.UserResponse\"\x00\x12J\n" +
+	"CreateUser\x12\x1d.proto_user.CreateUserRequest\x1a\x18.proto_user.UserResponse\"\x00\x12K\n" +
+	"\fListUserByID\x12\x1f.proto_user.ListUserByIDRequest\x1a\x18.proto_user.UserResponse\"\x00\x12Q\n" +
+	"\x0fListUserByEmail\x12\".proto_user.ListUserByEmailRequest\x1a\x18.proto_user.UserResponse\"\x00\x12W\n" +
+	"\x12ListUserByUsername\x12%.proto_user.ListUserByUsernameRequest\x1a\x18.proto_user.UserResponse\"\x00\x12J\n" +
 	"\tListUsers\x12\x1c.proto_user.ListUsersRequest\x1a\x1d.proto_user.ListUsersResponse\"\x00B Z\x1e./internal/handlers/proto_userb\x06proto3"
 
 var (
@@ -340,24 +434,30 @@ func file_internal_handlers_proto_user_user_proto_rawDescGZIP() []byte {
 	return file_internal_handlers_proto_user_user_proto_rawDescData
 }
 
-var file_internal_handlers_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_internal_handlers_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_internal_handlers_proto_user_user_proto_goTypes = []any{
-	(*CreateUserRequest)(nil), // 0: proto_user.CreateUserRequest
-	(*UserResponse)(nil),      // 1: proto_user.UserResponse
-	(*GetUserRequest)(nil),    // 2: proto_user.GetUserRequest
-	(*ListUsersRequest)(nil),  // 3: proto_user.ListUsersRequest
-	(*ListUsersResponse)(nil), // 4: proto_user.ListUsersResponse
+	(*CreateUserRequest)(nil),         // 0: proto_user.CreateUserRequest
+	(*UserResponse)(nil),              // 1: proto_user.UserResponse
+	(*ListUserByIDRequest)(nil),       // 2: proto_user.ListUserByIDRequest
+	(*ListUserByEmailRequest)(nil),    // 3: proto_user.ListUserByEmailRequest
+	(*ListUserByUsernameRequest)(nil), // 4: proto_user.ListUserByUsernameRequest
+	(*ListUsersRequest)(nil),          // 5: proto_user.ListUsersRequest
+	(*ListUsersResponse)(nil),         // 6: proto_user.ListUsersResponse
 }
 var file_internal_handlers_proto_user_user_proto_depIdxs = []int32{
 	1, // 0: proto_user.ListUsersResponse.users:type_name -> proto_user.UserResponse
 	0, // 1: proto_user.UserService.CreateUser:input_type -> proto_user.CreateUserRequest
-	2, // 2: proto_user.UserService.GetUser:input_type -> proto_user.GetUserRequest
-	3, // 3: proto_user.UserService.ListUsers:input_type -> proto_user.ListUsersRequest
-	1, // 4: proto_user.UserService.CreateUser:output_type -> proto_user.UserResponse
-	1, // 5: proto_user.UserService.GetUser:output_type -> proto_user.UserResponse
-	4, // 6: proto_user.UserService.ListUsers:output_type -> proto_user.ListUsersResponse
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	2, // 2: proto_user.UserService.ListUserByID:input_type -> proto_user.ListUserByIDRequest
+	3, // 3: proto_user.UserService.ListUserByEmail:input_type -> proto_user.ListUserByEmailRequest
+	4, // 4: proto_user.UserService.ListUserByUsername:input_type -> proto_user.ListUserByUsernameRequest
+	5, // 5: proto_user.UserService.ListUsers:input_type -> proto_user.ListUsersRequest
+	1, // 6: proto_user.UserService.CreateUser:output_type -> proto_user.UserResponse
+	1, // 7: proto_user.UserService.ListUserByID:output_type -> proto_user.UserResponse
+	1, // 8: proto_user.UserService.ListUserByEmail:output_type -> proto_user.UserResponse
+	1, // 9: proto_user.UserService.ListUserByUsername:output_type -> proto_user.UserResponse
+	6, // 10: proto_user.UserService.ListUsers:output_type -> proto_user.ListUsersResponse
+	6, // [6:11] is the sub-list for method output_type
+	1, // [1:6] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -374,7 +474,7 @@ func file_internal_handlers_proto_user_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_handlers_proto_user_user_proto_rawDesc), len(file_internal_handlers_proto_user_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

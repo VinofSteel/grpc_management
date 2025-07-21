@@ -16,8 +16,16 @@ message UserResponse {
     string updated_at = 5;
 }
 
-message GetUserRequest {
+message ListUserByIDRequest {
     string id = 1;
+}
+
+message ListUserByEmailRequest {
+    string email = 1;
+}
+
+message ListUserByUsernameRequest {
+    string username = 1;
 }
 
 message ListUsersRequest {
@@ -31,6 +39,8 @@ message ListUsersResponse {
 
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (UserResponse) {}
-    rpc GetUser(GetUserRequest) returns (UserResponse) {}
+    rpc ListUserByID(ListUserByIDRequest) returns (UserResponse) {}
+    rpc ListUserByEmail(ListUserByEmailRequest) returns (UserResponse) {}
+    rpc ListUserByUsername(ListUserByUsernameRequest) returns (UserResponse) {}
     rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
 }

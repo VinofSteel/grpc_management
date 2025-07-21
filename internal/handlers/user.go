@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"log/slog"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/vinofsteel/grpc-management/internal/database"
@@ -14,27 +13,20 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type userValidation struct {
-	Email    string `validate:"required,email"`
-	Username string `validate:"required,min=3,max=50,alphanum"`
-	Password string `validate:"required,password"`
-}
-
-func toUserValidation(email, username, password string) *userValidation {
-	return &userValidation{
-		Email:    email,
-		Username: username,
-		Password: password,
-	}
-}
-
 func (h *Handlers) CreateUser(ctx context.Context, newUser *proto_user.CreateUserRequest) (*proto_user.UserResponse, error) {
 	slog.InfoContext(ctx, "Received request to create a new user", "email", newUser.Email, "username", newUser.Username)
 
-	userValidation := toUserValidation(newUser.Email, newUser.Username, newUser.Password)
-	if err := h.Validator.ValidateData(userValidation); err != nil {
-		slog.WarnContext(ctx, "User validation failed", "errors", err.Errors)
-		return nil, status.Errorf(codes.InvalidArgument, "validation failed: %s", strings.Join(err.Errors, "; "))
+	// Inline validation struct
+	if err := h.validateRequest(ctx, struct {
+		Email    string `validate:"required,email"`
+		Username string `validate:"required,min=3,max=50,alphanum"`
+		Password string `validate:"required,password"`
+	}{
+		Email:    newUser.Email,
+		Username: newUser.Username,
+		Password: newUser.Password,
+	}, "CreateUser"); err != nil {
+		return nil, err
 	}
 
 	// Check if user already exists
@@ -83,7 +75,7 @@ func (h *Handlers) CreateUser(ctx context.Context, newUser *proto_user.CreateUse
 		return nil, status.Errorf(codes.Internal, "failed to create user")
 	}
 
-	slog.InfoContext(ctx, "User created successfully", "id", dbUser.ID, "email", dbUser.Email)
+	slog.InfoContext(ctx, "User created successfully", "id", dbUser.ID, "email", dbUser.Email, "username", dbUser.Username)
 	return &proto_user.UserResponse{
 		Id:        dbUser.ID.String(),
 		Email:     dbUser.Email,
@@ -93,7 +85,7 @@ func (h *Handlers) CreateUser(ctx context.Context, newUser *proto_user.CreateUse
 	}, nil
 }
 
-func (h *Handlers) GetUser(ctx context.Context, req *proto_user.GetUserRequest) (*proto_user.UserResponse, error) {
+func (h *Handlers) ListUserByID(ctx context.Context, req *proto_user.ListUserByIDRequest) (*proto_user.UserResponse, error) {
 	slog.InfoContext(ctx, "Received request to get user", "id", req.Id)
 
 	// Validate UUID format
@@ -117,7 +109,77 @@ func (h *Handlers) GetUser(ctx context.Context, req *proto_user.GetUserRequest) 
 		return nil, status.Errorf(codes.Internal, "internal server error")
 	}
 
-	slog.InfoContext(ctx, "User retrieved successfully", "id", dbUser.ID, "email", dbUser.Email)
+	slog.InfoContext(ctx, "User retrieved successfully", "id", dbUser.ID, "email", dbUser.Email, "username", dbUser.Username)
+	return &proto_user.UserResponse{
+		Id:        dbUser.ID.String(),
+		Email:     dbUser.Email,
+		Username:  dbUser.Username,
+		CreatedAt: dbUser.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt: dbUser.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}, nil
+}
+
+func (h *Handlers) ListUserByEmail(ctx context.Context, req *proto_user.ListUserByEmailRequest) (*proto_user.UserResponse, error) {
+	slog.InfoContext(ctx, "Received request to get user", "email", req.Email)
+
+	// Inline validation for email
+	if err := h.validateRequest(ctx, struct {
+		Email string `validate:"required,email"`
+	}{
+		Email: req.Email,
+	}, "ListUserByEmail"); err != nil {
+		return nil, err
+	}
+
+	// Get user from database
+	dbUser, err := h.Queries.ListUserByEmail(ctx, database.ListUserByEmailParams{
+		Email: req.Email,
+	})
+	if err != nil {
+		if err == sql.ErrNoRows {
+			slog.WarnContext(ctx, "User not found", "email", req.Email)
+			return nil, status.Errorf(codes.NotFound, "user not found")
+		}
+		slog.ErrorContext(ctx, "Database error while fetching user", "error", err)
+		return nil, status.Errorf(codes.Internal, "internal server error")
+	}
+
+	slog.InfoContext(ctx, "User retrieved successfully", "id", dbUser.ID, "email", dbUser.Email, "username", dbUser.Username)
+	return &proto_user.UserResponse{
+		Id:        dbUser.ID.String(),
+		Email:     dbUser.Email,
+		Username:  dbUser.Username,
+		CreatedAt: dbUser.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt: dbUser.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}, nil
+}
+
+func (h *Handlers) ListUserByUsername(ctx context.Context, req *proto_user.ListUserByUsernameRequest) (*proto_user.UserResponse, error) {
+	slog.InfoContext(ctx, "Received request to get user", "username", req.Username)
+
+	// Inline validation for username
+	if err := h.validateRequest(ctx, struct {
+		Username string `validate:"required,min=3,max=50,alphanum"`
+	}{
+		Username: req.Username,
+	}, "ListUserByUsername"); err != nil {
+		return nil, err
+	}
+
+	// Get user from database
+	dbUser, err := h.Queries.ListUserByUsername(ctx, database.ListUserByUsernameParams{
+		Username: req.Username,
+	})
+	if err != nil {
+		if err == sql.ErrNoRows {
+			slog.WarnContext(ctx, "User not found", "username", req.Username)
+			return nil, status.Errorf(codes.NotFound, "user not found")
+		}
+		slog.ErrorContext(ctx, "Database error while fetching user", "error", err)
+		return nil, status.Errorf(codes.Internal, "internal server error")
+	}
+
+	slog.InfoContext(ctx, "User retrieved successfully", "id", dbUser.ID, "email", dbUser.Email, "username", dbUser.Username)
 	return &proto_user.UserResponse{
 		Id:        dbUser.ID.String(),
 		Email:     dbUser.Email,
@@ -129,6 +191,16 @@ func (h *Handlers) GetUser(ctx context.Context, req *proto_user.GetUserRequest) 
 
 func (h *Handlers) ListUsers(ctx context.Context, req *proto_user.ListUsersRequest) (*proto_user.ListUsersResponse, error) {
 	slog.InfoContext(ctx, "Received request to list users", "limit", req.Limit, "offset", req.Offset)
+
+	if err := h.validateRequest(ctx, struct {
+		Limit  int32 `validate:"min=0,max=100"`
+		Offset int32 `validate:"min=0"`
+	}{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	}, "ListUsers"); err != nil {
+		return nil, err
+	}
 
 	// Set default pagination values if not provided
 	limit := req.Limit
