@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/vinofsteel/grpc-management/internal/database"
 	"github.com/vinofsteel/grpc-management/internal/handlers/proto_user"
 	"golang.org/x/crypto/bcrypt"
@@ -27,7 +28,7 @@ func toUserValidation(email, username, password string) *userValidation {
 	}
 }
 
-func (h *Handlers) CreateUser(ctx context.Context, newUser *proto_user.NewUser) (*proto_user.User, error) {
+func (h *Handlers) CreateUser(ctx context.Context, newUser *proto_user.CreateUserRequest) (*proto_user.UserResponse, error) {
 	slog.InfoContext(ctx, "Received request to create a new user", "email", newUser.Email, "username", newUser.Username)
 
 	userValidation := toUserValidation(newUser.Email, newUser.Username, newUser.Password)
@@ -83,12 +84,90 @@ func (h *Handlers) CreateUser(ctx context.Context, newUser *proto_user.NewUser) 
 	}
 
 	slog.InfoContext(ctx, "User created successfully", "id", dbUser.ID, "email", dbUser.Email)
-
-	return &proto_user.User{
+	return &proto_user.UserResponse{
 		Id:        dbUser.ID.String(),
 		Email:     dbUser.Email,
 		Username:  dbUser.Username,
-		CreatedAt: dbUser.CreatedAt.Format("2006-01-02"),
-		UpdatedAt: dbUser.UpdatedAt.Format("2006-01-02"),
+		CreatedAt: dbUser.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt: dbUser.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}, nil
+}
+
+func (h *Handlers) GetUser(ctx context.Context, req *proto_user.GetUserRequest) (*proto_user.UserResponse, error) {
+	slog.InfoContext(ctx, "Received request to get user", "id", req.Id)
+
+	// Validate UUID format
+	userID, err := uuid.Parse(req.Id)
+	if err != nil {
+		slog.WarnContext(ctx, "Invalid user ID format", "id", req.Id, "error", err)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid user ID format")
+	}
+
+	// Get user from database
+	dbUser, err := h.Queries.ListUserById(ctx, database.ListUserByIdParams{
+		ID:          userID,
+		ListDeleted: false, // Don't include deleted users
+	})
+	if err != nil {
+		if err == sql.ErrNoRows {
+			slog.WarnContext(ctx, "User not found", "id", req.Id)
+			return nil, status.Errorf(codes.NotFound, "user not found")
+		}
+		slog.ErrorContext(ctx, "Database error while fetching user", "error", err)
+		return nil, status.Errorf(codes.Internal, "internal server error")
+	}
+
+	slog.InfoContext(ctx, "User retrieved successfully", "id", dbUser.ID, "email", dbUser.Email)
+	return &proto_user.UserResponse{
+		Id:        dbUser.ID.String(),
+		Email:     dbUser.Email,
+		Username:  dbUser.Username,
+		CreatedAt: dbUser.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt: dbUser.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}, nil
+}
+
+func (h *Handlers) ListUsers(ctx context.Context, req *proto_user.ListUsersRequest) (*proto_user.ListUsersResponse, error) {
+	slog.InfoContext(ctx, "Received request to list users", "limit", req.Limit, "offset", req.Offset)
+
+	// Set default pagination values if not provided
+	limit := req.Limit
+	offset := req.Offset
+
+	if limit <= 0 {
+		limit = 20
+	} else if limit > 100 {
+		limit = 100
+	}
+
+	if offset < 0 {
+		offset = 0
+	}
+
+	// Get users from database
+	dbUsers, err := h.Queries.ListUsers(ctx, database.ListUsersParams{
+		Limit:  limit,
+		Offset: offset,
+	})
+	if err != nil {
+		slog.ErrorContext(ctx, "Database error while fetching users", "error", err)
+		return nil, status.Errorf(codes.Internal, "internal server error")
+	}
+
+	// Convert database users to protobuf users
+	users := make([]*proto_user.UserResponse, len(dbUsers))
+	for i, dbUser := range dbUsers {
+		users[i] = &proto_user.UserResponse{
+			Id:        dbUser.ID.String(),
+			Email:     dbUser.Email,
+			Username:  dbUser.Username,
+			CreatedAt: dbUser.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			UpdatedAt: dbUser.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		}
+	}
+
+	slog.InfoContext(ctx, "Users retrieved successfully", "count", len(users), "limit", limit, "offset", offset)
+	return &proto_user.ListUsersResponse{
+		Users: users,
 	}, nil
 }

@@ -2,13 +2,13 @@ syntax = "proto3";
 package proto_user;
 option go_package = "./internal/handlers/proto_user";
 
-message NewUser {
+message CreateUserRequest {
     string email = 1;
     string username = 2;
     string password = 3;
 }
 
-message User {
+message UserResponse {
     string id = 1;
     string email = 2;
     string username = 3;
@@ -16,6 +16,21 @@ message User {
     string updated_at = 5;
 }
 
+message GetUserRequest {
+    string id = 1;
+}
+
+message ListUsersRequest {
+    int32 offset = 1;
+    int32 limit = 2;
+}
+
+message ListUsersResponse {
+    repeated UserResponse users = 1;
+}
+
 service UserService {
-    rpc CreateUser(NewUser) returns (User) {}
+    rpc CreateUser(CreateUserRequest) returns (UserResponse) {}
+    rpc GetUser(GetUserRequest) returns (UserResponse) {}
+    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
 }
